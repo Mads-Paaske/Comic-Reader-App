@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:ComicReaderApp"
+             x:Class="ComicReaderApp.LibraryPage">
+    <ContentPage.Content>
+        
+        <Grid RowDefinitions="*, Auto">
+
+            <!-- Row 0: the shelf area -->
+            <ScrollView Grid.Row="0">
+                <Grid>
+                    <FlexLayout x:Name="BooksFlex"
+                                Direction="Row"
+                                Wrap="Wrap"
+                                JustifyContent="Start"
+                                AlignItems="Start"
+                                AlignContent="Start"
+                                VerticalOptions="Start"
+                                SizeChanged="OnFlexLayoutSizeChanged"
+                                BindableLayout.ItemsSource="{Binding Books}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Grid WidthRequest="{Binding SlotWidth, Source={RelativeSource AncestorType={x:Type local:LibraryViewModel}}}"
+                                      Padding="{Binding ItemPadding, Source={RelativeSource AncestorType={x:Type local:LibraryViewModel}}}">
+                                    <Border Stroke="Black"
+                                            StrokeThickness="1"
+                                            HeightRequest="120">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding OpenBookCommand, Source={RelativeSource AncestorType={x:Type local:LibraryViewModel}}}"
+                                                CommandParameter="{Binding .}" />
+                                        </Border.GestureRecognizers>
+                                        <Label Text="{Binding Title}" HorizontalOptions="Center" VerticalOptions="Center" />
+                                    </Border>
+                                </Grid>
+                            </DataTemplate> 
+                        </BindableLayout.ItemTemplate>
+                    </FlexLayout>
+                    <GraphicsView x:Name="ShelfLinesView"
+                                  InputTransparent="True"
+                                  HorizontalOptions="Fill"
+                                  VerticalOptions="Fill"/>
+                </Grid>
+            </ScrollView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
