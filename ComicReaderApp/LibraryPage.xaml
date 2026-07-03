@@ -26,7 +26,8 @@
                                       Padding="{Binding ItemPadding, Source={RelativeSource AncestorType={x:Type local:LibraryViewModel}}}">
                                     <Border Stroke="Black"
                                             StrokeThickness="1"
-                                            HeightRequest="120">
+                                            HeightRequest="120"
+                                            Background="Transparent">
                                         <Border.GestureRecognizers>
                                             <TapGestureRecognizer
                                                 Command="{Binding OpenBookCommand, Source={RelativeSource AncestorType={x:Type local:LibraryViewModel}}}"
