@@ -10,7 +10,7 @@
 
             <!-- Row 0: the shelf area -->
             <ScrollView Grid.Row="0">
-                <Grid>
+                <Grid Padding="0,0,0,90">
                     <FlexLayout x:Name="BooksFlex"
                                 Direction="Row"
                                 Wrap="Wrap"
@@ -44,6 +44,18 @@
                                   VerticalOptions="Fill"/>
                 </Grid>
             </ScrollView>
+            
+            <Button Grid.Row="0"
+                    Text="+"
+                    FontSize="24"
+                    WidthRequest="56"
+                    HeightRequest="56"
+                    CornerRadius="28"
+                    HorizontalOptions="End"
+                    VerticalOptions="End"
+                    Margin="0,0,20,20"
+                    Command="{Binding AddBookCommand}" />
+            
         </Grid>
     </ContentPage.Content>
 </ContentPage>

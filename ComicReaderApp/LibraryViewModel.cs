@@ -40,8 +40,19 @@ public class LibraryViewModel : INotifyPropertyChanged
         }
     }
 
-    void OnOpenBook(Book book) { /* navigate to reader */ }
-    void OnAddBook() { /* file picker */ }
+    void OnOpenBook(Book book)
+    {
+        var parameters = new Dictionary<string, object> { ["SelectedBook"] = book };
+        Shell.Current.GoToAsync("//MainPage", parameters);
+    }
+    
+    void OnAddBook()
+    {
+        Shell.Current.GoToAsync(nameof(AddBookPage));
+    }
+    
+    public void AddBook(Book book) => Books.Add(book);
+    
     void OnOpenSettings() { /* navigate to settings */ }
 
     public event PropertyChangedEventHandler PropertyChanged;

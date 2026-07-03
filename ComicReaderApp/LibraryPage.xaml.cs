@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ComicReaderApp;
 
-public partial class LibraryPage : ContentPage
+public partial class LibraryPage : ContentPage, IQueryAttributable
 {
     readonly ShelfLineDrawable _drawable = new();
     readonly LibraryViewModel _vm;
@@ -80,5 +80,13 @@ public partial class LibraryPage : ContentPage
                 $"child X={v.X:F1}, Width={v.Width:F1}");
         
         ShelfLinesView.Invalidate(); // tells GraphicsView "redraw now"
+    }
+    
+    public void ApplyQueryAttributes(IDictionary<string, object> query)
+    {
+        if (query.TryGetValue("NewBook", out var value) && value is Book book)
+        {
+            _vm.AddBook(book);
+        }
     }
 }

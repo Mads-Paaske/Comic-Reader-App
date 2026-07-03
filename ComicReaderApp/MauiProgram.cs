@@ -17,6 +17,8 @@ public static class MauiProgram
         
         builder.Services.AddTransient<LibraryViewModel>();
         builder.Services.AddTransient<LibraryPage>();
+        builder.Services.AddTransient<AddBookPage>();
+        builder.Services.AddTransient<AddBookViewModel>();
 
 #if DEBUG
         builder.Logging.AddDebug();
