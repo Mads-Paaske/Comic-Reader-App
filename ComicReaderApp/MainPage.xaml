@@ -3,10 +3,63 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ComicReaderApp.MainPage">
 
-    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
-        <Label Text="Welcome to Comic Reader" />
-        <Button Text="Go to Library"
+    <Grid>
+        <Grid RowDefinitions="Auto,*">
+
+            <Label Grid.Row="0"
+                   Text="Welcome to Comic Reader"
+                   HorizontalOptions="Center"
+                   Margin="0,10" />
+
+            <Grid Grid.Row="1"
+                  x:Name="ZoomContainer"
+                  BackgroundColor="Transparent">
+                <Grid.GestureRecognizers>
+                    <PinchGestureRecognizer PinchUpdated="OnPinchUpdated" />
+                    <PanGestureRecognizer PanUpdated="OnPanUpdated" />
+                    <TapGestureRecognizer NumberOfTapsRequired="2" Tapped="OnDoubleTapped" />
+                </Grid.GestureRecognizers>
+
+                <Image x:Name="PageImage"
+                       Source="{Binding CurrentPageImage}"
+                       Aspect="AspectFit"
+                       HorizontalOptions="Fill"
+                       VerticalOptions="Fill" />
+
+                <!-- Left tap zone: previous page -->
+                <Grid BackgroundColor="Transparent" HorizontalOptions="Start" WidthRequest="80">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnPreviousZoneTapped" />
+                    </Grid.GestureRecognizers>
+                </Grid>
+
+                <!-- Right tap zone: next page -->
+                <Grid BackgroundColor="Transparent" HorizontalOptions="End" WidthRequest="80">
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnNextZoneTapped" />
+                    </Grid.GestureRecognizers>
+                </Grid>
+
+                <Label Text="{Binding PageIndicator}"
+                       HorizontalOptions="Center"
+                       VerticalOptions="End"
+                       Margin="0,0,0,20"
+                       BackgroundColor="#80000000"
+                       TextColor="White"
+                       Padding="10,4" />
+            </Grid>
+
+        </Grid>
+
+        <Button Text="📚"
+                FontSize="24"
+                WidthRequest="56"
+                HeightRequest="56"
+                CornerRadius="28"
+                HorizontalOptions="End"
+                VerticalOptions="End"
+                Margin="0,0,20,20"
                 Clicked="OnLibraryButtonClicked" />
-    </VerticalStackLayout>
+    </Grid>
 
 </ContentPage>
