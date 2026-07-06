@@ -6,6 +6,8 @@ namespace ComicReaderApp;
 
 public class AddBookViewModel : INotifyPropertyChanged
 {
+    Book _editingBook;
+    
     string _title, _author, _year, _publisher, _isbn, _errorMessage;
     string _pickedFilePath;
     string _pickedFileName = "Choose File...";
@@ -19,6 +21,9 @@ public class AddBookViewModel : INotifyPropertyChanged
     public bool HasError => !string.IsNullOrEmpty(ErrorMessage);
     public string PickedFileName { get => _pickedFileName; set { _pickedFileName = value; OnPropertyChanged(); } }
 
+    public string PageTitle => _editingBook == null ? "Add Book" : "Edit Book";
+    public string SaveButtonText => _editingBook == null ? "Save" : "Update";
+    
     public ICommand PickFileCommand { get; }
     public ICommand SaveCommand { get; }
 
@@ -48,6 +53,23 @@ public class AddBookViewModel : INotifyPropertyChanged
             ErrorMessage = $"File pick failed: {ex.Message}";
         }
     }
+    
+    public void LoadForEdit(Book book)
+    {
+        _editingBook = book;
+        Title = book.Title;
+        Author = book.Author;
+        Year = book.Year;
+        Publisher = book.Publisher;
+        Isbn = book.Isbn;
+        _pickedFilePath = book.FilePath;
+        PickedFileName = string.IsNullOrEmpty(book.FilePath)
+            ? "Choose File..."
+            : Path.GetFileName(book.FilePath);
+
+        OnPropertyChanged(nameof(PageTitle));
+        OnPropertyChanged(nameof(SaveButtonText));
+    }   
 
     async void OnSave()
     {
@@ -62,7 +84,6 @@ public class AddBookViewModel : INotifyPropertyChanged
             return;
         }
 
-        // Layer 1: fast pre-check, since time has passed since the file was picked.
         if (!File.Exists(_pickedFilePath))
         {
             ErrorMessage = "That file can no longer be found. Please choose it again.";
@@ -73,10 +94,6 @@ public class AddBookViewModel : INotifyPropertyChanged
 
         try
         {
-            // Layer 2: the real safety net. A cheap Exists check can't catch
-            // permission errors, a file becoming locked by another process,
-            // or the file vanishing in the instant between the check above
-            // and this actually running.
             using var testStream = File.OpenRead(_pickedFilePath);
         }
         catch (Exception ex)
@@ -85,18 +102,33 @@ public class AddBookViewModel : INotifyPropertyChanged
             return;
         }
 
-        var book = new Book
+        if (_editingBook != null)
         {
-            Title = Title,
-            Author = Author,
-            Year = Year,
-            Publisher = Publisher,
-            Isbn = Isbn,
-            FilePath = _pickedFilePath
-        };
+            _editingBook.Title = Title;
+            _editingBook.Author = Author;
+            _editingBook.Year = Year;
+            _editingBook.Publisher = Publisher;
+            _editingBook.Isbn = Isbn;
+            _editingBook.FilePath = _pickedFilePath;
 
-        var parameters = new Dictionary<string, object> { ["NewBook"] = book };
-        await Shell.Current.GoToAsync("..", parameters);
+            var parameters = new Dictionary<string, object> { ["UpdatedBook"] = _editingBook };
+            await Shell.Current.GoToAsync("..", parameters);
+        }
+        else
+        {
+            var book = new Book
+            {
+                Title = Title,
+                Author = Author,
+                Year = Year,
+                Publisher = Publisher,
+                Isbn = Isbn,
+                FilePath = _pickedFilePath
+            };
+
+            var parameters = new Dictionary<string, object> { ["NewBook"] = book };
+            await Shell.Current.GoToAsync("..", parameters);
+        }
     }
 
     public event PropertyChangedEventHandler PropertyChanged;

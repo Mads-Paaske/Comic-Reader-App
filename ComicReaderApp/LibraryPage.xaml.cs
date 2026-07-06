@@ -88,11 +88,17 @@ public partial class LibraryPage : ContentPage, IQueryAttributable
         ShelfLinesView.Invalidate(); // tells GraphicsView "redraw now"
     }
     
-    public void ApplyQueryAttributes(IDictionary<string, object> query)
+    public async void ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        if (query.TryGetValue("NewBook", out var value) && value is Book book)
+        if (query.TryGetValue("NewBook", out var newValue) && newValue is Book newBook)
         {
-            _vm.AddBook(book);
+            query.Remove("NewBook");   // consumed — don't act on this again if replayed
+            await _vm.AddBook(newBook);
+        }
+        else if (query.TryGetValue("UpdatedBook", out var updatedValue) && updatedValue is Book updatedBook)
+        {
+            query.Remove("UpdatedBook");
+            await _vm.UpdateBook(updatedBook);
         }
     }
 }

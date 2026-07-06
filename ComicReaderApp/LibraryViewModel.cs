@@ -19,7 +19,8 @@ public class LibraryViewModel : INotifyPropertyChanged
         OpenBookCommand = new Command<Book>(OnOpenBook);
         AddBookCommand = new Command(OnAddBook);
         OpenSettingsCommand = new Command(OnOpenSettings);
-        
+        LongPressBookCommand = new Command<Book>(OnLongPressBook);
+
     }
 
     
@@ -39,6 +40,7 @@ public class LibraryViewModel : INotifyPropertyChanged
     public ICommand OpenBookCommand { get; }
     public ICommand AddBookCommand { get; }
     public ICommand OpenSettingsCommand { get; }
+    public ICommand LongPressBookCommand { get; }
     
     public async Task LoadBooksAsync()
     {
@@ -88,4 +90,35 @@ public class LibraryViewModel : INotifyPropertyChanged
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
+    
+    async void OnLongPressBook(Book book)
+    {
+        string action = await Shell.Current.DisplayActionSheet(
+            book.Title, "Cancel", "Delete", "Edit");
+
+        if (action == "Delete")
+        {
+            bool confirmed = await Shell.Current.DisplayAlert(
+                "Delete Book",
+                $"Remove \"{book.Title}\" from your library? This won't delete the original file.",
+                "Delete", "Cancel");
+
+            if (confirmed)
+            {
+                await _database.DeleteBookAsync(book);
+                Books.Remove(book);
+            }
+        }
+        else if (action == "Edit")
+        {
+            var parameters = new Dictionary<string, object> { ["EditBook"] = book };
+            await Shell.Current.GoToAsync(nameof(AddBookPage), parameters);
+        }
+    }
+    
+    public async Task UpdateBook(Book book)
+    {
+        await _database.UpdateBookAsync(book);
+    }
+    
 }
