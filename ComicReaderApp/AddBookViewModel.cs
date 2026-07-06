@@ -62,6 +62,29 @@ public class AddBookViewModel : INotifyPropertyChanged
             return;
         }
 
+        // Layer 1: fast pre-check, since time has passed since the file was picked.
+        if (!File.Exists(_pickedFilePath))
+        {
+            ErrorMessage = "That file can no longer be found. Please choose it again.";
+            _pickedFilePath = null;
+            PickedFileName = "Choose File...";
+            return;
+        }
+
+        try
+        {
+            // Layer 2: the real safety net. A cheap Exists check can't catch
+            // permission errors, a file becoming locked by another process,
+            // or the file vanishing in the instant between the check above
+            // and this actually running.
+            using var testStream = File.OpenRead(_pickedFilePath);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Couldn't access that file: {ex.Message}";
+            return;
+        }
+
         var book = new Book
         {
             Title = Title,

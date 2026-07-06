@@ -40,10 +40,26 @@ public class LibraryViewModel : INotifyPropertyChanged
         }
     }
 
-    void OnOpenBook(Book book)
+    async void OnOpenBook(Book book)
     {
-        var parameters = new Dictionary<string, object> { ["SelectedBook"] = book };
-        Shell.Current.GoToAsync("//MainPage", parameters);
+        if (string.IsNullOrEmpty(book.FilePath) || !File.Exists(book.FilePath))
+        {
+            await Shell.Current.DisplayAlert(
+                "Can't Open Book",
+                $"The file for \"{book.Title}\" couldn't be found. It may have been moved or deleted.",
+                "OK");
+            return;
+        }
+
+        try
+        {
+            var parameters = new Dictionary<string, object> { ["SelectedBook"] = book };
+            await Shell.Current.GoToAsync("//MainPage", parameters);
+        }
+        catch (Exception ex)
+        {
+            await Shell.Current.DisplayAlert("Navigation Failed", ex.Message, "OK");
+        }
     }
     
     void OnAddBook()

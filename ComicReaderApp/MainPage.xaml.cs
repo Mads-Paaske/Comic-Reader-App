@@ -36,7 +36,19 @@ public partial class MainPage : ContentPage, IQueryAttributable
     {
         if (query.TryGetValue("SelectedBook", out var value) && value is Book book)
         {
-            await _vm.LoadBookAsync(book);
+            try
+            {
+                await _vm.LoadBookAsync(book);
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert(
+                    "Can't Open Book",
+                    $"Something went wrong opening \"{book.Title}\": {ex.Message}",
+                    "OK");
+
+                await Shell.Current.GoToAsync(nameof(LibraryPage));
+            }
         }
     }
 
