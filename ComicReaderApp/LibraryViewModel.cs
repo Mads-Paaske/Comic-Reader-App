@@ -78,7 +78,6 @@ public class LibraryViewModel : INotifyPropertyChanged
     public async Task AddBook(Book book)
     {
         await _database.AddBookAsync(book);   // Id gets assigned here
-        Books.Add(book);
     }
     
     void OnOpenSettings() { /* navigate to settings */ }
