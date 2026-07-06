@@ -31,6 +31,12 @@ public partial class LibraryPage : ContentPage, IQueryAttributable
             Dispatcher.Dispatch(RecalculateShelfLines);
         };
     }
+    
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await _vm.LoadBooksAsync();
+    }
 
     void OnFlexLayoutSizeChanged(object sender, EventArgs e)
     {

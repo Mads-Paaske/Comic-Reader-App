@@ -10,6 +10,19 @@ public class LibraryViewModel : INotifyPropertyChanged
     
     double _slotWidth = 100;
     
+    readonly BookDatabase _database;
+    
+    public LibraryViewModel(BookDatabase database)
+    {
+        _database = database;
+        
+        OpenBookCommand = new Command<Book>(OnOpenBook);
+        AddBookCommand = new Command(OnAddBook);
+        OpenSettingsCommand = new Command(OnOpenSettings);
+        
+    }
+
+    
     public double HorizontalPadding { get; } = 5;
 
     public Thickness ItemPadding => new Thickness(HorizontalPadding, 10);
@@ -26,18 +39,13 @@ public class LibraryViewModel : INotifyPropertyChanged
     public ICommand OpenBookCommand { get; }
     public ICommand AddBookCommand { get; }
     public ICommand OpenSettingsCommand { get; }
-
-    public LibraryViewModel()
+    
+    public async Task LoadBooksAsync()
     {
-        OpenBookCommand = new Command<Book>(OnOpenBook);
-        AddBookCommand = new Command(OnAddBook);
-        OpenSettingsCommand = new Command(OnOpenSettings);
-
-        // temp test data
-        foreach (var i in Enumerable.Range(1, 23))
-        {
-            Books.Add(new Book { Title = $"Book {i}" });
-        }
+        var books = await _database.GetAllBooksAsync();
+        Books.Clear();
+        foreach (var book in books)
+            Books.Add(book);
     }
 
     async void OnOpenBook(Book book)
@@ -67,7 +75,11 @@ public class LibraryViewModel : INotifyPropertyChanged
         Shell.Current.GoToAsync(nameof(AddBookPage));
     }
     
-    public void AddBook(Book book) => Books.Add(book);
+    public async Task AddBook(Book book)
+    {
+        await _database.AddBookAsync(book);   // Id gets assigned here
+        Books.Add(book);
+    }
     
     void OnOpenSettings() { /* navigate to settings */ }
 
