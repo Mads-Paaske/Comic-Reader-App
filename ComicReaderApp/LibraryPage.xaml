@@ -49,6 +49,14 @@
                                   InputTransparent="True"
                                   HorizontalOptions="Fill"
                                   VerticalOptions="Fill"/>
+                    
+                    <Label Text="Press the &quot;+&quot; button to add your first book to your library"
+                           IsVisible="{Binding IsLibraryEmpty}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           Margin="40,0"
+                           TextColor="Gray" />
                 </Grid>
             </ScrollView>
             

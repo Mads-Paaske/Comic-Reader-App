@@ -12,6 +12,8 @@ public class LibraryViewModel : INotifyPropertyChanged
     
     readonly BookDatabase _database;
     
+    public bool IsLibraryEmpty => Books.Count == 0;
+    
     public LibraryViewModel(BookDatabase database)
     {
         _database = database;
@@ -20,7 +22,8 @@ public class LibraryViewModel : INotifyPropertyChanged
         AddBookCommand = new Command(OnAddBook);
         OpenSettingsCommand = new Command(OnOpenSettings);
         LongPressBookCommand = new Command<Book>(OnLongPressBook);
-
+        
+        Books.CollectionChanged += (s, e) => OnPropertyChanged(nameof(IsLibraryEmpty));
     }
 
     
