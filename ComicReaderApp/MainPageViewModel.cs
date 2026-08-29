@@ -6,6 +6,8 @@ namespace ComicReaderApp;
 
 public class MainPageViewModel : INotifyPropertyChanged
 {
+    readonly IComicSourceFactory _comicSourceFactory;
+
     IComicSource _comicSource;
     int _currentPageIndex;
     ImageSource _currentPageImage;
@@ -26,20 +28,17 @@ public class MainPageViewModel : INotifyPropertyChanged
     public ICommand NextPageCommand { get; }
     public ICommand PreviousPageCommand { get; }
 
-    public MainPageViewModel()
+    public MainPageViewModel(IComicSourceFactory comicSourceFactory)
     {
+        _comicSourceFactory = comicSourceFactory;
+
         NextPageCommand = new Command(async () => await ChangePage(1), () => CanGoNext());
         PreviousPageCommand = new Command(async () => await ChangePage(-1), () => CanGoPrevious());
     }
 
     public async Task LoadBookAsync(Book book)
     {
-        // Format dispatch lives HERE, and only here.
-        _comicSource = Path.GetExtension(book.FilePath).ToLowerInvariant() switch
-        {
-            ".pdf" => await PdfComicSource.LoadAsync(book.FilePath),
-            _ => throw new NotSupportedException($"Unsupported format: {book.FilePath}")
-        };
+        _comicSource = await _comicSourceFactory.CreateAsync(book.FilePath);
 
         _currentPageIndex = 0;
         await ShowCurrentPage();

@@ -24,6 +24,9 @@ public static class MauiProgram
         builder.Services.AddTransient<MainPage>();
         builder.Services.AddTransient<MainPageViewModel>();
         builder.Services.AddSingleton<IBookRepository, BookDatabase>();
+        builder.Services.AddSingleton<INavigationService, ShellNavigationService>();
+        builder.Services.AddSingleton<IComicSourceFactory, ComicSourceFactory>();
+        builder.Services.AddSingleton<IComicFilePicker, ComicFilePicker>();
 
 #if DEBUG
         builder.Logging.AddDebug();

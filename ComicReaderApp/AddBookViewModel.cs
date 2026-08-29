@@ -6,8 +6,11 @@ namespace ComicReaderApp;
 
 public class AddBookViewModel : INotifyPropertyChanged
 {
+    readonly INavigationService _navigation;
+    readonly IComicFilePicker _filePicker;
+
     Book _editingBook;
-    
+
     string _title, _author, _year, _publisher, _isbn, _errorMessage;
     string _pickedFilePath;
     string _pickedFileName = "Choose File...";
@@ -27,8 +30,11 @@ public class AddBookViewModel : INotifyPropertyChanged
     public ICommand PickFileCommand { get; }
     public ICommand SaveCommand { get; }
 
-    public AddBookViewModel()
+    public AddBookViewModel(INavigationService navigation, IComicFilePicker filePicker)
     {
+        _navigation = navigation;
+        _filePicker = filePicker;
+
         PickFileCommand = new Command(OnPickFile);
         SaveCommand = new Command(OnSave);
     }
@@ -37,10 +43,7 @@ public class AddBookViewModel : INotifyPropertyChanged
     {
         try
         {
-            var result = await FilePicker.Default.PickAsync(new PickOptions
-            {
-                PickerTitle = "Select a comic file"
-            });
+            var result = await _filePicker.PickComicAsync();
 
             if (result != null)
             {
@@ -112,7 +115,7 @@ public class AddBookViewModel : INotifyPropertyChanged
             _editingBook.FilePath = _pickedFilePath;
 
             var parameters = new Dictionary<string, object> { ["UpdatedBook"] = _editingBook };
-            await Shell.Current.GoToAsync("..", parameters);
+            await _navigation.GoToAsync("..", parameters);
         }
         else
         {
@@ -127,7 +130,7 @@ public class AddBookViewModel : INotifyPropertyChanged
             };
 
             var parameters = new Dictionary<string, object> { ["NewBook"] = book };
-            await Shell.Current.GoToAsync("..", parameters);
+            await _navigation.GoToAsync("..", parameters);
         }
     }
 

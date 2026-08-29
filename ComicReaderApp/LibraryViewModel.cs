@@ -11,13 +11,15 @@ public class LibraryViewModel : INotifyPropertyChanged
     double _slotWidth = 100;
     
     readonly IBookRepository _database;
+    readonly INavigationService _navigation;
 
     public bool IsLibraryEmpty => Books.Count == 0;
 
-    public LibraryViewModel(IBookRepository database)
+    public LibraryViewModel(IBookRepository database, INavigationService navigation)
     {
         _database = database;
-        
+        _navigation = navigation;
+
         OpenBookCommand = new Command<Book>(OnOpenBook);
         AddBookCommand = new Command(OnAddBook);
         OpenSettingsCommand = new Command(OnOpenSettings);
@@ -57,7 +59,7 @@ public class LibraryViewModel : INotifyPropertyChanged
     {
         if (string.IsNullOrEmpty(book.FilePath) || !File.Exists(book.FilePath))
         {
-            await Shell.Current.DisplayAlert(
+            await _navigation.DisplayAlert(
                 "Can't Open Book",
                 $"The file for \"{book.Title}\" couldn't be found. It may have been moved or deleted.",
                 "OK");
@@ -67,17 +69,17 @@ public class LibraryViewModel : INotifyPropertyChanged
         try
         {
             var parameters = new Dictionary<string, object> { ["SelectedBook"] = book };
-            await Shell.Current.GoToAsync("//MainPage", parameters);
+            await _navigation.GoToAsync("//MainPage", parameters);
         }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlert("Navigation Failed", ex.Message, "OK");
+            await _navigation.DisplayAlert("Navigation Failed", ex.Message, "OK");
         }
     }
-    
+
     void OnAddBook()
     {
-        Shell.Current.GoToAsync(nameof(AddBookPage));
+        _navigation.GoToAsync(nameof(AddBookPage));
     }
     
     public async Task AddBook(Book book)
@@ -96,12 +98,12 @@ public class LibraryViewModel : INotifyPropertyChanged
     
     async void OnLongPressBook(Book book)
     {
-        string action = await Shell.Current.DisplayActionSheet(
+        string action = await _navigation.DisplayActionSheet(
             book.Title, "Cancel", "Delete", "Edit");
 
         if (action == "Delete")
         {
-            bool confirmed = await Shell.Current.DisplayAlert(
+            bool confirmed = await _navigation.DisplayConfirmation(
                 "Delete Book",
                 $"Remove \"{book.Title}\" from your library? This won't delete the original file.",
                 "Delete", "Cancel");
@@ -115,7 +117,7 @@ public class LibraryViewModel : INotifyPropertyChanged
         else if (action == "Edit")
         {
             var parameters = new Dictionary<string, object> { ["EditBook"] = book };
-            await Shell.Current.GoToAsync(nameof(AddBookPage), parameters);
+            await _navigation.GoToAsync(nameof(AddBookPage), parameters);
         }
     }
     

@@ -6,9 +6,15 @@ public class BookDatabase : IBookRepository
 {
     readonly SQLiteAsyncConnection _connection;
 
+    /// <summary>Production constructor: stores the DB in the app data directory.</summary>
     public BookDatabase()
+        : this(Path.Combine(FileSystem.AppDataDirectory, "comicreader.db3"))
     {
-        string dbPath = Path.Combine(FileSystem.AppDataDirectory, "comicreader.db3");
+    }
+
+    /// <summary>Opens (or creates) the database at an explicit path. Used by tests.</summary>
+    public BookDatabase(string dbPath)
+    {
         _connection = new SQLiteAsyncConnection(dbPath);
         _connection.CreateTableAsync<Book>().Wait();
     }
