@@ -38,6 +38,7 @@ No linter/formatter is configured. Verify changes by running the test suite and 
 - Keep unrelated changes in separate commits.
 - A feature branch isn't ready to merge until its unit tests exist and pass (see **Testing**).
 - Don't `push` or open a PR unless asked. Assume local commits are fine; publishing is the user's call.
+- **When asked to push a branch that has no upstream, set one:** `git push -u origin <branch>`. A bare `git push` on an untracked branch is a no-op that looks like success — always confirm with `git status` / `git rev-parse @{upstream}` that the branch is actually tracking and the remote is up to date.
 
 ## Testing
 
