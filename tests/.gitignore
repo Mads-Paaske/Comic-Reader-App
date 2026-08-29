@@ -1,0 +1,5 @@
+# Build output for test projects (the app project has its own .gitignore)
+[Bb]in/
+[Oo]bj/
+[Tt]est[Rr]esults/
+*.user

@@ -1,6 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# 
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicReaderApp", "ComicReaderApp\ComicReaderApp.csproj", "{9CD2959B-5657-425B-9C09-965A7AA94D68}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{72CFC4C3-5B0A-4151-9A58-A8DE91FB26CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicReaderApp.Tests", "tests\ComicReaderApp.Tests\ComicReaderApp.Tests.csproj", "{3B2A27FC-C8F6-4008-8F39-EDE1A67F4F76}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +17,12 @@ Global
 		{9CD2959B-5657-425B-9C09-965A7AA94D68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CD2959B-5657-425B-9C09-965A7AA94D68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CD2959B-5657-425B-9C09-965A7AA94D68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B2A27FC-C8F6-4008-8F39-EDE1A67F4F76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B2A27FC-C8F6-4008-8F39-EDE1A67F4F76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B2A27FC-C8F6-4008-8F39-EDE1A67F4F76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B2A27FC-C8F6-4008-8F39-EDE1A67F4F76}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3B2A27FC-C8F6-4008-8F39-EDE1A67F4F76} = {72CFC4C3-5B0A-4151-9A58-A8DE91FB26CE}
 	EndGlobalSection
 EndGlobal

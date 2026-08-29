@@ -23,7 +23,7 @@ public static class MauiProgram
         builder.Services.AddTransient<AddBookViewModel>();
         builder.Services.AddTransient<MainPage>();
         builder.Services.AddTransient<MainPageViewModel>();
-        builder.Services.AddSingleton<BookDatabase>();
+        builder.Services.AddSingleton<IBookRepository, BookDatabase>();
 
 #if DEBUG
         builder.Logging.AddDebug();

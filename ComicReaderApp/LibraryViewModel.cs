@@ -10,11 +10,11 @@ public class LibraryViewModel : INotifyPropertyChanged
     
     double _slotWidth = 100;
     
-    readonly BookDatabase _database;
-    
+    readonly IBookRepository _database;
+
     public bool IsLibraryEmpty => Books.Count == 0;
-    
-    public LibraryViewModel(BookDatabase database)
+
+    public LibraryViewModel(IBookRepository database)
     {
         _database = database;
         

@@ -2,7 +2,7 @@ using SQLite;
 
 namespace ComicReaderApp;
 
-public class BookDatabase
+public class BookDatabase : IBookRepository
 {
     readonly SQLiteAsyncConnection _connection;
 

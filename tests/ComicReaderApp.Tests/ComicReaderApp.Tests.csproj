@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <!-- MAUI unit tests run on the dev-machine platform. This project references
+             Microsoft.Maui.* types (Command, Thickness, ...) via the app project, so it
+             must target a MAUI-compatible TFM. Windows is the local loop on this repo. -->
+        <TargetFramework>net9.0-windows10.0.19041.0</TargetFramework>
+        <UseMaui>true</UseMaui>
+        <OutputType>Library</OutputType>
+
+        <!-- This is a test library, not an app: turn off MAUI single-project asset globbing and
+             Resizetizer. Without this, the referenced app project's app-icon/splash/image items
+             flow in transitively and Resizetizer fails with "duplicate file names ... appicon". -->
+        <EnableDefaultMauiItems>false</EnableDefaultMauiItems>
+        <EnableMauiImageProcessing>false</EnableMauiImageProcessing>
+        <EnableMauiSplashScreenProcessing>false</EnableMauiSplashScreenProcessing>
+        <EnableMauiAssetProcessing>false</EnableMauiAssetProcessing>
+        <EnableMauiFontProcessing>false</EnableMauiFontProcessing>
+
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+        <PackageReference Include="xunit" Version="2.9.2" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- ExcludeAssets build/buildTransitive: consume the app's compiled types but keep its
+             MSBuild logic (Resizetizer, XAML compile, single-project assets) out of this project. -->
+        <ProjectReference Include="..\..\ComicReaderApp\ComicReaderApp.csproj">
+            <ExcludeAssets>build;buildTransitive</ExcludeAssets>
+        </ProjectReference>
+    </ItemGroup>
+
+</Project>
